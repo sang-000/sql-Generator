@@ -13,7 +13,7 @@ public class SqlGeneratorService {
     private String apiKey;
 
     public SqlResponse generateSql(String prompt) {
-        String url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" + apiKey;
+        String url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key=" + apiKey;
 
         String fullPrompt = "Generate only a MySQL query for the following request. " +
                 "Return only the SQL query, no explanation, no markdown: " + prompt;
