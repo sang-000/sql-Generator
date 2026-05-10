@@ -15,8 +15,11 @@ public class SqlGeneratorService {
     public SqlResponse generateSql(String prompt) {
         String url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key=" + apiKey;
 
-        String fullPrompt = "Generate only a MySQL query for the following request. " +
-                "Return only the SQL query, no explanation, no markdown: " + prompt;
+        String fullPrompt = "For the following request, generate a MySQL query. " +
+                "Respond in exactly this format:\n" +
+                "QUERY: <only the SQL query here>\n" +
+                "EXPLANATION: <one line explanation in simple English>\n" +
+                "Request: " + prompt;
 
         Map<String, Object> part = new HashMap<>();
         part.put("text", fullPrompt);
@@ -35,11 +38,11 @@ public class SqlGeneratorService {
         RestTemplate restTemplate = new RestTemplate();
         Map response = restTemplate.postForObject(url, entity, Map.class);
 
-        String sql = extractSql(response);
-        return new SqlResponse(sql);
+        String rawResponse = extractText(response);
+        return parseResponse(rawResponse);
     }
 
-    private String extractSql(Map response) {
+    private String extractText(Map response) {
         try {
             List candidates = (List) response.get("candidates");
             Map candidate = (Map) candidates.get(0);
@@ -48,7 +51,22 @@ public class SqlGeneratorService {
             Map part = (Map) parts.get(0);
             return part.get("text").toString().trim();
         } catch (Exception e) {
-            return "Error generating SQL: " + e.getMessage();
+            return "Error: " + e.getMessage();
         }
+    }
+
+    private SqlResponse parseResponse(String rawResponse) {
+        String query = "";
+        String explanation = "";
+
+        for (String line : rawResponse.split("\n")) {
+            if (line.startsWith("QUERY:")) {
+                query = line.replace("QUERY:", "").trim();
+            } else if (line.startsWith("EXPLANATION:")) {
+                explanation = line.replace("EXPLANATION:", "").trim();
+            }
+        }
+
+        return new SqlResponse(query, explanation);
     }
 }
