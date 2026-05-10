@@ -1,4 +1,4 @@
-SQL GENERATOR
+# SQL GENERATOR
 --> Transform plain English into MySQL queries instantly — powered by Google Gemini AI, Spring Boot, and React.
 
 --> SQL Generator is a full-stack web application that allows users to describe their database needs in plain English and receive accurate MySQL queries in seconds. 
@@ -11,4 +11,15 @@ Features :
 - Keyboard Shortcut — Press Ctrl + Enter to generate instantly
 - Professional UI — Clean dark-themed interface with JetBrains Mono font for code display
 - Secure — API keys stored in environment config, never exposed to frontend
+
+## Screenshots
+
+### Postman API Testing
+![Postman](postman.png)
+
+### Frontend UI
+![Frontend](frontend.png)
+
+### Generated SQL Output
+![Output](output.png)
 
